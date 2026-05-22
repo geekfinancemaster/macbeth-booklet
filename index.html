@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive 3D digital booklet of William Shakespeare's tragedy, Macbeth. Includes ambient sounds, 3D page-flipping, and interactive scenes.">
+  <title>The Tragedy of Macbeth — Interactive Booklet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Fog Overlay -->
+  <div class="ambient-fog"></div>
+
+  <!-- HUD Deck -->
+  <header class="hud-deck" aria-label="Booklet Controls">
+    <div class="hud-title">The Folio Archive</div>
+    <div class="hud-buttons">
+      <!-- Ambient Audio Toggle -->
+      <button id="toggle-audio" class="hud-btn" aria-label="Toggle atmospheric sound effects">
+        <span>Ambient Sound</span>
+        <div class="audio-visualizer-bar" id="audio-visualizer">
+          <div class="audio-bar"></div>
+          <div class="audio-bar"></div>
+          <div class="audio-bar"></div>
+          <div class="audio-bar"></div>
+        </div>
+      </button>
+      
+      <!-- Reset Book Button -->
+      <button id="reset-book" class="hud-btn" aria-label="Reset booklet to cover">
+        <span>Close Book</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Book Wrapper & Nav zones -->
+  <main class="book-wrapper">
+    <!-- Left Navigation Arrow -->
+    <button id="prev-page" class="page-turn-zone left-zone disabled" aria-label="Previous Page">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- The 3D Book -->
+    <div class="book" id="macbeth-book">
+      
+      <!-- SHEET 1 (Cover / Biography) -->
+      <div class="sheet active-leaf" id="sheet-1">
+        <!-- Front: Gothic Cover -->
+        <div class="page-face hard-cover-front">
+          <div class="spine-shadow-right"></div>
+          <div class="cover-content">
+            <div class="cover-subtitle">William Shakespeare</div>
+            
+            <!-- Gothic Crest SVG -->
+            <svg class="gothic-crest" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50,5 L85,25 L85,55 C85,75 50,95 50,95 C50,95 15,75 15,55 L15,25 L50,5 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M50,15 L50,85 M25,45 L75,45 M35,25 L65,65 M35,65 L65,25" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2"/>
+              <circle cx="50" cy="45" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M42,42 L50,30 L58,42 L54,39 L50,45 L46,39 Z" fill="currentColor"/>
+              <path d="M45,52 C45,52 48,56 50,56 C52,56 55,52 55,52" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
+
+            <h1 class="cover-title">THE TRAGEDY<br>OF<br>MACBETH</h1>
+            
+            <div class="cover-author">London, MDCVI</div>
+            <button class="cover-start-prompt" id="btn-open-book" aria-label="Open the booklet">Begin Reading</button>
+          </div>
+        </div>
+
+        <!-- Back: Intro & Dramatis Personae -->
+        <div class="page-face back">
+          <div class="spine-shadow-left"></div>
+          <div class="page-header">
+            <span class="act-title">Introduction</span>
+            <span class="scene-num">Folio I</span>
+          </div>
+          <div class="page-body">
+            <div class="bio-portrait-container">
+              <!-- Shakespeare Stylized Portrait Placeholder SVG -->
+              <svg class="bio-portrait" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#ded2b5"/>
+                <circle cx="50" cy="38" r="18" fill="#5c4d37"/>
+                <path d="M50,22 C43,22 38,28 38,36 C38,37 40,42 42,44 C44,38 48,36 50,36 C52,36 56,38 58,44 C60,42 62,37 62,36 C62,28 57,22 50,22 Z" fill="#2d2217"/>
+                <path d="M22,80 C22,60 35,55 50,55 C65,55 78,60 78,80 L78,90 L22,90 Z" fill="#2d2217"/>
+                <path d="M40,55 L50,68 L60,55" fill="#f5f2eb"/>
+              </svg>
+              <div class="bio-name">William Shakespeare</div>
+              <div class="bio-dates">1564 – 1616</div>
+            </div>
+            <p class="bio-text">
+              Written around 1606, <em>Macbeth</em> dramatizes the damaging physical and psychological effects of political ambition on those who seek power for its own sake. It remains one of Shakespeare's most intense, atmospheric, and dark tragedies.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span class="page-num">i</span>
+            <span class="book-title-footer">The Tragedy of Macbeth</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHEET 2 (The Heath & Prophecies) -->
+      <div class="sheet" id="sheet-2">
+        <!-- Front: The Witches & Cauldron -->
+        <div class="page-face">
+          <div class="spine-shadow-right"></div>
+          <div class="page-header">
+            <span class="act-title">Act I, Scene I</span>
+            <span class="scene-num">A Desert Place</span>
+          </div>
+          <div class="page-body witch-scene-layout">
+            <div class="script-speech">
+              <span class="speaker">First Witch</span>
+              <span class="poetic-line">When shall we three meet again</span>
+              <span class="poetic-line">In thunder, lightning, or in rain?</span>
+            </div>
+            <div class="script-speech">
+              <span class="speaker">Second Witch</span>
+              <span class="poetic-line">When the <span class="anno-word" data-translation="The noise and commotion of battle/war.">hurlyburly</span>'s done,</span>
+              <span class="poetic-line">When the battle's lost and won.</span>
+            </div>
+            
+            <!-- Cauldron Section -->
+            <div class="cauldron-interactive-container">
+              <div class="ingredients-shelf">
+                <div class="shelf-title">Toss into Brew:</div>
+                <button class="ingredient-item" data-ingredient="eye-of-newt">Eye of Newt</button>
+                <button class="ingredient-item" data-ingredient="toe-of-frog">Toe of Frog</button>
+                <button class="ingredient-item" data-ingredient="wool-of-bat">Wool of Bat</button>
+                <button class="ingredient-item" data-ingredient="tongue-of-dog">Tongue of Dog</button>
+              </div>
+              
+              <div class="cauldron-area" id="cauldron-wrapper">
+                <!-- Cauldron SVG -->
+                <svg class="cauldron-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Cauldron body -->
+                  <path d="M15,40 C15,30 85,30 85,40 C85,60 75,85 50,85 C25,85 15,60 15,40 Z" />
+                  <!-- Rim -->
+                  <ellipse cx="50" cy="35" rx="35" ry="8" fill="#35302b" stroke="#1e1b18" stroke-width="2"/>
+                  <!-- Cauldron handles -->
+                  <path d="M10,45 C5,45 5,55 12,58" fill="none" stroke="#1e1b18" stroke-width="3"/>
+                  <path d="M90,45 C95,45 95,55 88,58" fill="none" stroke="#1e1b18" stroke-width="3"/>
+                  <!-- Fire underneath -->
+                  <path d="M30,85 C30,85 35,98 40,90 C45,98 50,88 55,95 C60,88 65,95 70,85 Z" fill="#e25822" opacity="0.8"/>
+                  <path d="M38,87 C38,87 43,95 47,89 C51,95 55,87 59,92 C63,87 68,92 70,87 Z" fill="#f7b731" opacity="0.9"/>
+                </svg>
+                
+                <div class="cauldron-bubbles" id="potion-bubbles"></div>
+                <div class="cauldron-recipe-status" id="brew-message">Brew is empty...</div>
+              </div>
+            </div>
+            
+            <div class="cauldron-dialogue-box" id="cauldron-quote">
+              "Double, double toil and trouble;<br>Fire burn, and cauldron bubble."
+            </div>
+          </div>
+          <div class="page-footer">
+            <span class="page-num">ii</span>
+            <span class="book-title-footer">Act I, Scene I</span>
+          </div>
+        </div>
+
+        <!-- Back: Prophecies -->
+        <div class="page-face back">
+          <div class="spine-shadow-left"></div>
+          <div class="page-header">
+            <span class="act-title">Act I, Scene III</span>
+            <span class="scene-num">The Heath</span>
+          </div>
+          <div class="page-body">
+            <span class="stage-direction">Enter Macbeth and Banquo. Witches confront them.</span>
+            
+            <div class="script-speech">
+              <span class="speaker">Third Witch</span>
+              <span class="poetic-line">All hail, Macbeth, thou shalt be king hereafter!</span>
+            </div>
+            
+            <div class="script-speech">
+              <span class="speaker">Banquo</span>
+              <span class="poetic-line">Good sir, why do you start, and seem to fear</span>
+              <span class="poetic-line">Things that do sound so fair? I' the name of truth,</span>
+              <span class="poetic-line">Are ye fantastical, or that indeed</span>
+              <span class="poetic-line">Which outwardly ye show?</span>
+            </div>
+
+            <div class="translation-panel" style="margin-top:auto;">
+              <div class="translation-panel-header">Prophecy Decoded</div>
+              <p id="prophecy-interpretation">
+                The witches greet Macbeth with three titles: Thane of Glamis (his current title), Thane of Cawdor (newly given, but unknown to him), and King hereafter. This sparks his ambition and sets the tragedy in motion.
+              </p>
+            </div>
+          </div>
+          <div class="page-footer">
+            <span class="page-num">iii</span>
+            <span class="book-title-footer">Act I, Scene III</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHEET 3 (Dagger Soliloquy / Back Cover) -->
+      <div class="sheet" id="sheet-3">
+        <!-- Front: The Dagger Soliloquy -->
+        <div class="page-face">
+          <div class="spine-shadow-right"></div>
+          <div class="page-header">
+            <span class="act-title">Act II, Scene I</span>
+            <span class="scene-num">Inverness Castle</span>
+          </div>
+          <div class="page-body soliloquy-container">
+            <span class="stage-direction">A dagger appears floating in the air. Macbeth clutches at it.</span>
+            
+            <div class="soliloquy-split">
+              <!-- Soliloquy Text -->
+              <div class="soliloquy-text">
+                <div class="script-speech">
+                  <span class="speaker">Macbeth</span>
+                  <span class="poetic-line">Is this a dagger which I see before me,</span>
+                  <span class="poetic-line">The handle toward my hand? Come, let me clutch thee.</span>
+                  <span class="poetic-line">I have thee not, and yet I see thee still.</span>
+                  <span class="poetic-line">Art thou not, fatal vision, sensible</span>
+                  <span class="poetic-line">To feeling as to sight? or art thou but</span>
+                  <span class="poetic-line">A dagger of the mind, a false creation,</span>
+                  <span class="poetic-line">Proceeding from the heat-oppressed brain?</span>
+                  <span class="poetic-line">I see thee yet, in form as <span class="anno-word" data-translation="Tangible; easily perceived by the senses.">palpable</span></span>
+                  <span class="poetic-line">As this which now I draw.</span>
+                  <span class="poetic-line">Thou <span class="anno-word" data-translation="Instructs, directs, or shows the path.">marshall'st</span> me the way that I was going;</span>
+                  <span class="poetic-line">And such an instrument I was to use.</span>
+                  <span class="poetic-line">Mine eyes are made the fools o' the other senses,</span>
+                  <span class="poetic-line">Or else worth all the rest; I see thee still,</span>
+                  <span class="poetic-line">And on thy blade and <span class="anno-word" data-translation="The handle and guard of a sword or dagger.">dudgeon</span> <span class="anno-word" data-translation="Splashes, droplets, or heavy drops (usually of blood).">gouts</span> of blood,</span>
+                  <span class="poetic-line">Which was not so before. There's no such thing:</span>
+                  <span class="poetic-line">It is the bloody business which informs</span>
+                  <span class="poetic-line">Thus to mine eyes.</span>
+                </div>
+              </div>
+              
+              <!-- Interactive Dagger Art -->
+              <div class="dagger-interactive-art" id="dagger-art-zone">
+                <div class="dagger-glow-circle"></div>
+                <!-- Ornate Dagger SVG -->
+                <svg class="dagger-svg" id="glowing-dagger" viewBox="0 0 100 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Blade -->
+                  <path d="M50,30 C56,80 57,170 54,220 L46,220 C43,170 44,80 50,30 Z" fill="#b0bec5" stroke="#37474f" stroke-width="2"/>
+                  <!-- Blade fuller (blood groove) -->
+                  <line x1="50" y1="50" x2="50" y2="210" stroke="#37474f" stroke-width="1.5" stroke-dasharray="1,1"/>
+                  <!-- Guard -->
+                  <path d="M25,220 C35,215 65,215 75,220 C70,225 30,225 25,220 Z" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+                  <circle cx="23" cy="220" r="3" fill="#d4af37"/>
+                  <circle cx="77" cy="220" r="3" fill="#d4af37"/>
+                  <!-- Handle / Hilt -->
+                  <rect x="44" y="224" width="12" height="45" rx="3" fill="#4e342e" stroke="#3e2723" stroke-width="2"/>
+                  <!-- Wire wraps on handle -->
+                  <line x1="44" y1="233" x2="56" y2="233" stroke="#d4af37" stroke-width="1"/>
+                  <line x1="44" y1="242" x2="56" y2="242" stroke="#d4af37" stroke-width="1"/>
+                  <line x1="44" y1="251" x2="56" y2="251" stroke="#d4af37" stroke-width="1"/>
+                  <line x1="44" y1="260" x2="56" y2="260" stroke="#d4af37" stroke-width="1"/>
+                  <!-- Pommel -->
+                  <circle cx="50" cy="275" r="7" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+                  <circle cx="50" cy="275" r="3" fill="#d4af37"/>
+                </svg>
+                <div class="dagger-hint">Hover Dagger</div>
+              </div>
+            </div>
+            
+            <!-- Translation Panel -->
+            <div class="translation-panel" id="translation-display">
+              <div class="translation-panel-header" id="translation-title">Elizabethan Glossary</div>
+              <p id="translation-text">Select any highlighted word to reveal its translation and meaning in modern English.</p>
+            </div>
+          </div>
+          <div class="page-footer">
+            <span class="page-num">iv</span>
+            <span class="book-title-footer">Act II, Scene I</span>
+          </div>
+        </div>
+
+        <!-- Back: Hard Cover Back -->
+        <div class="page-face hard-cover-back">
+          <div class="spine-shadow-left"></div>
+          <div class="back-cover-content">
+            <div class="cover-subtitle">Epilogue</div>
+            
+            <!-- Wax Seal SVG -->
+            <svg class="gold-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="2,2"/>
+              <path d="M50,15 C50,15 15,25 15,50 C15,75 50,85 50,85 C50,85 85,75 85,50 C85,25 50,15 50,15 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+              <!-- Crown inside seal -->
+              <path d="M35,60 L32,45 L42,50 L50,40 L58,50 L68,45 L65,60 Z" fill="currentColor"/>
+              <rect x="35" y="62" width="30" height="3" fill="currentColor"/>
+            </svg>
+
+            <blockquote class="back-cover-quote">
+              "Life's but a walking shadow, a poor player<br>
+              That struts and frets his hour upon the stage<br>
+              And then is heard no more..."
+              <cite style="display:block; font-size:0.85rem; margin-top:10px; color:var(--gold-dim); font-family:var(--font-title);">Act V, Scene V</cite>
+            </blockquote>
+
+            <div class="back-cover-credits">
+              Created for the Folio Digital Collection<br>
+              Anno Domini 2026
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Navigation Arrow -->
+    <button id="next-page" class="page-turn-zone right-zone" aria-label="Next Page">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
